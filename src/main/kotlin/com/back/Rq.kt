@@ -1,13 +1,13 @@
 package com.back
 
 class Rq(
-    val cmd: String
+    val cmd: String,
 ) {
-    val actionName: String
 
+    val actionName: String
     val paramMap: Map<String, String>
 
-    init{
+    init {
         val cmdBits = cmd.split("?")
         actionName = cmdBits[0]
 
@@ -15,9 +15,13 @@ class Rq(
 
             cmdBits[1]
                 .split("&")
-                .map {
+                .mapNotNull {  // aaa=bbb
                     val paramBits = it.split("=")
-                    paramBits[0] to paramBits[1]
+                    if(paramBits.size == 2) {
+                        paramBits[0] to paramBits[1]
+                    } else {
+                        null
+                    }
                 }
                 .toMap()
         } else {
@@ -25,12 +29,12 @@ class Rq(
         }
     }
 
-    fun getParam(key: String, defaultValue: String): String{
+    fun getParam(key: String, defaultValue: String): String {
         return paramMap[key] ?: defaultValue
     }
 
-    fun getParamAsInt(key: String, defaultValue: Int): Int{
-            return paramMap[key]?.toIntOrNull() ?: defaultValue
+    fun getParamAsInt(key: String, defaultValue: Int): Int {
+        return paramMap[key]?.toIntOrNull() ?: defaultValue
     }
 
 }
