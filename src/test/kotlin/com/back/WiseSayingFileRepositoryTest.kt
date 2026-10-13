@@ -27,13 +27,23 @@ class WiseSayingFileRepositoryTest {
         val wiseSaying = wiseSayingRepository
             .save(WiseSaying(content = "나의 죽음을 적들에게 알리지 말라.", author = "충무공 이순신"))
 
-        val filePath = wiseSayingRepository
+        val isExist = wiseSayingRepository
             .tableDirPath
             .toFile()
             .listFiles()
             ?.find { it.name == "${wiseSaying.id}.json" }
 
-        assertThat(filePath).isNotNull
+        assertThat(isExist).isNotNull
+    }
+
+    @Test
+    fun `findById`() {
+        val wiseSaying = wiseSayingRepository
+            .save(WiseSaying("나의 죽음을 적들에게 알리지 말라.", "충무공 이순신"))
+
+        val foundWiseSaying = wiseSayingRepository.findById(wiseSaying.id)
+
+        assertThat(foundWiseSaying).isEqualTo(wiseSaying)
     }
 
 }

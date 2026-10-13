@@ -29,4 +29,16 @@ data class WiseSaying(
             """.trimIndent()
         }
 
+    companion object {
+        fun fromJsonStr(jsonStr: String): WiseSaying {
+            val map = JsonUtil.jsonStrToMap(jsonStr)
+
+            return WiseSaying(
+                id = map["id"] as Int,
+                content = map["content"] as String,
+                author = map["author"] as String,
+            )
+        }
+    }
+
 }
