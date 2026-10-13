@@ -16,7 +16,7 @@ class WiseSayingFileRepository: WiseSayingRepository {
         return wiseSaying
             .takeIf { it.isNew() }
             .also {
-                wiseSaying.id = ++lastId
+                wiseSaying.id = genNextId()
                 saveOnDisk(wiseSaying)
             } ?: wiseSaying
     }
@@ -49,11 +49,15 @@ class WiseSayingFileRepository: WiseSayingRepository {
     }
 
     override fun delete(wiseSaying: WiseSaying): Boolean {
-        TODO("Not yet implemented")
+        return tableDirPath
+            .resolve("${wiseSaying.id}.json")
+            .toFile()
+            .takeIf { it.exists() }
+            ?.delete() ?: false
     }
 
     override fun clear() {
-        TODO("Not yet implemented")
+        tableDirPath.toFile().deleteRecursively()
     }
 
     fun saveLastId(lastId: Int) {
@@ -65,11 +69,15 @@ class WiseSayingFileRepository: WiseSayingRepository {
     }
 
     fun loadLastId(): Int {
-        return runCatching {
-            tableDirPath.resolve("lastId.txt")
+        return tableDirPath.resolve("lastId.txt")
                 .toFile()
                 .readText()
-                .toInt()
-        }.getOrElse{ 0 }
+                .toIntOrNull() ?: 0
+    }
+
+    fun genNextId(): Int {
+        return (loadLastId() + 1).also {
+            saveLastId(it)
+        }
     }
 }
