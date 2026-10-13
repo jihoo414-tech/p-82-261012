@@ -19,7 +19,7 @@ class App(
             when(action){
                 "종료" -> {
                     systemController.exit()
-                    return;
+                    break;
                 }
                 "등록" -> wiseSayingController.write()
                 "목록" -> wiseSayingController.list()
