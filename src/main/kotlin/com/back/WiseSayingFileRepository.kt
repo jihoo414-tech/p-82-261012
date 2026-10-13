@@ -1,8 +1,39 @@
 package com.back
 
+import java.nio.file.Path
+
 class WiseSayingFileRepository: WiseSayingRepository {
+
+    var lastId = 0
+
+    val tableDirPath: Path
+        get() {
+            return AppConfig.dbDirPath.resolve("wiseSaying")
+        }
+
+
     override fun save(wiseSaying: WiseSaying): WiseSaying {
-        TODO("Not yet implemented")
+        return wiseSaying
+            .takeIf { it.isNew() }
+            .also {
+                wiseSaying.id = ++lastId
+                saveOnDisk(wiseSaying)
+            } ?: wiseSaying
+    }
+
+    private fun saveOnDisk(wiseSaying: WiseSaying) {
+        mkTableDirsIfNotExists()
+
+        val wiseSayingFilePath = tableDirPath.resolve("${wiseSaying.id}.json")
+        wiseSayingFilePath.toFile().writeText(wiseSaying.jsonStr)
+    }
+
+    private fun mkTableDirsIfNotExists() {
+        tableDirPath.toFile().run {
+            if (!exists()) {
+                mkdirs()
+            }
+        }
     }
 
     override fun findListDesc(): List<WiseSaying> {

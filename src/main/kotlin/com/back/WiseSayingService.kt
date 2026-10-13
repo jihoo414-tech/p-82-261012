@@ -1,7 +1,7 @@
 package com.back
 
 class WiseSayingService(
-    val wiseSayingRepository: WiseSayingMemRepository = SingletonScope.wiseSayingRepository
+    val wiseSayingRepository: WiseSayingMemRepository = SingletonScope.wiseSayingMemRepository
 ) {
 
     fun add(content: String, author: String): WiseSaying = WiseSaying(content = content, author = author).also {
