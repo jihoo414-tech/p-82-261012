@@ -1,8 +1,8 @@
 package com.back
 
 class App(
-    val wiseSayingController: WiseSayingController = WiseSayingController(),
-    val systemController: SystemController = SystemController()
+    val wiseSayingController: WiseSayingController = SingletonScope.wiseSayingController,
+    val systemController: SystemController = SingletonScope.systemController
 ) {
     fun run(){
 

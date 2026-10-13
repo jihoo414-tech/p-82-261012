@@ -1,7 +1,7 @@
 package com.back
 
 class WiseSayingController(
-    val wiseSayingService: WiseSayingService = WiseSayingService()
+    val wiseSayingService: WiseSayingService = SingletonScope.wiseSayingService
 ) {
 
 
