@@ -55,4 +55,21 @@ class WiseSayingFileRepository: WiseSayingRepository {
     override fun clear() {
         TODO("Not yet implemented")
     }
+
+    fun saveLastId(lastId: Int) {
+        mkTableDirsIfNotExists()
+
+        tableDirPath.resolve("lastId.txt")
+            .toFile()
+            .writeText(lastId.toString())
+    }
+
+    fun loadLastId(): Int {
+        return runCatching {
+            tableDirPath.resolve("lastId.txt")
+                .toFile()
+                .readText()
+                .toInt()
+        }.getOrElse{ 0 }
+    }
 }
